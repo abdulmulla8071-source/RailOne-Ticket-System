@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Platform Ticket Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- GOOGLE FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: url("images/station.jpg") no-repeat center center/cover;
+    font-family: 'Montserrat', sans-serif;
+    margin:0;
+}
+
+/* ===== GLASS PAYMENT BOX ===== */
+#paymentBox{
+    width:850px;
+    padding:100px 100px;
+    background: rgba(255, 255, 255, 0);   /* see-through */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius:35px;
+    text-align:center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.073);
+}
+
+/* ===== SECTION BOXES FOR EACH LINE (EXCEPT FIRST) ===== */
+.section{
+    background: rgba(255,255,255,0.1);  
+    margin:15px 0;
+    padding:20px 25px;
+    border-radius:20px;
+    text-align:center;
+    transition: 0.3s ease;
+}
+
+.section:hover{
+    background: rgba(255,255,255,0.15);
+}
+
+/* TEXT COLORS */
+.section span{
+    font-size:45px;
+    font-weight:bold;
+    color:#fefefe;
+}
+
+/* FIRST LINE (NO SECTION) */
+#firstLine{
+    font-size:75px;
+    font-weight:bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color:#f5f4f4;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    margin-bottom:70px;
+}
+
+/* BUTTON ROW */
+#btnRow{
+    margin-top:100px;
+    display:flex;
+    justify-content:space-between;
+}
+
+/* BUTTONS */
+#btnRow button{
+    padding:30px 80px;
+    font-size:45px;
+    font-weight:bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+#backBtn{
+    background: linear-gradient(145deg, #ff5f5f, #ff2b2b);
+    color:white;
+}
+#backBtn:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+}
+
+#nextBtn{
+    background: linear-gradient(145deg, #00ff72, #00cc44);
+    color:#004400;
+}
+#nextBtn:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+}
+
+/* =================== PAYMENT MODAL, SUCCESS, LOADING (same as before) =================== */
+#paymentModal{ 
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:850px;
+    padding:50px;
+    background:#ffeaea;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color:#003366;
+    font-size:60px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+    border-radius:25px;
+    text-align:center;
+    z-index:2500;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+#paymentModal select{
+    width:80%;
+    font-size:35px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    padding:20px;
+    margin:20px 0;
+    border-radius:15px;
+}
+#qrScanner{
+    display:none;
+    width:70%;
+    height:300px;
+    margin:20px auto;
+    border:3px dashed #003366;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+    color:#003366;
+    border-radius:15px;
+    background:rgba(0,0,0,0.05);
+}
+#upiAlert{
+    display:none;
+    margin-top:25px;
+    padding:15px;
+    background:rgba(255,80,80,0.85);
+    color:white;
+    font-size:25px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    border-radius:12px;
+}
+#paymentButtons{
+    display:flex;
+    justify-content:space-around;
+    margin-top:35px;
+}
+#paymentButtons button{
+    font-size:40px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    padding:20px 40px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+}
+#closePayment{
+    background:#ff3b3b;
+    color:white;
+}
+#payNow{
+    background:#00ff4d;
+    color:#004400;
+}
+#successAlert{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0.6);
+    width:900px;
+    padding:90px 60px;
+    background:rgba(0, 170, 80, 0.95);
+    color:white;
+    text-align:center;
+    border-radius:40px;
+    z-index:3000;
+    box-shadow:0 40px 80px rgba(0,0,0,0.6);
+    animation:successPop 0.6s ease forwards;
+    font-family: Cambria, Georgia, serif;
+    font-size: 40px;
+}
+.success-circle{
+    width:190px;
+    height:190px;
+    margin:0 auto;
+}
+.success-circle svg{
+    width:100%;
+    height:100%;
+}
+.success-circle circle{
+    stroke:#ffffff;
+    stroke-width:5;
+    stroke-dasharray:157;
+    stroke-dashoffset:157;
+    animation:circleDraw 0.8s ease forwards;
+}
+.success-circle path{
+    stroke:#ffffff;
+    stroke-width:6;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    stroke-dasharray:48;
+    stroke-dashoffset:48;
+    animation:checkDraw 0.4s ease forwards;
+    animation-delay:0.8s;
+}
+@keyframes circleDraw{ to{ stroke-dashoffset:0; } }
+@keyframes checkDraw{ to{ stroke-dashoffset:0; } }
+@keyframes successPop{
+    0%{ transform:translate(-50%,-50%) scale(0.4); opacity:0; }
+    100%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+}
+#successOk{
+    margin-top:40px;
+    padding:35px 90px;
+    font-size:40px;
+    font-weight:bold;
+    border:none;
+    border-radius:25px;
+    background:white;
+    color:#008040;
+    cursor:pointer;
+    font-family: Cambria, Georgia, serif;
+    box-shadow:0 12px 25px rgba(0,0,0,0.35);
+    transition:0.3s ease;
+}
+#successOk:hover{
+    transform:scale(1.08);
+    background:#f1fff6;
+}
+#loadingAlert{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:800px;
+    padding:90px;
+    background:#00ffe1ce;
+    color:#010808;
+    text-align:center;
+    border-radius:30px;
+    z-index:4000;
+    box-shadow:0 30px 70px rgba(0,0,0,0.6);
+    font-family: Cambria, Georgia, serif;
+}
+#loadingAlert h3{
+    font-size:50px;
+    font-weight: bold;
+    margin-top:40px;
+    letter-spacing:1px;
+}
+.dot-loader{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+.dot-loader span{
+    width:30px;
+    height:30px;
+    background:#040504cb;
+    border-radius:50%;
+    animation:dotBounce 1.4s infinite ease-in-out both;
+}
+.dot-loader span:nth-child(1){ animation-delay:-0.32s; }
+.dot-loader span:nth-child(2){ animation-delay:-0.16s; }
+@keyframes dotBounce{
+    0%,80%,100%{ transform:scale(0); }
+    40%{ transform:scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div id="paymentBox">
+
+    <!-- FIRST LINE WITHOUT SECTION -->
+    <div id="firstLine">Platform Ticket Booking</div>
+
+    <div class="section"><span id="showStation">Station Name: </span></div>
+    <div class="section"><span id="showPersons">No. of Persons: </span></div>
+    <div class="section"><span id="showFare">Total Fare: ₹</span></div>
+
+
+
+    <div id="btnRow">
+        <button id="backBtn" onclick="goBack()">Back</button>
+        <button id="nextBtn" onclick="openPayment()">Next</button>
+    </div>
+</div>
+
+<!-- PAYMENT MODAL, SUCCESS ALERT, LOADING ALERT (same as before) -->
+<div id="paymentModal">
+    <strong>Make Payment</strong>
+    <select id="upiSelect" onchange="showQR()">
+        <option value="" disabled selected hidden>-- Select the UPI QR Code-- </option>
+        <option>GPay</option>
+        <option>PhonePe</option>
+        <option>Paytm</option>
+        <option>BHIM UPI</option>
+    </select>
+    <div id="qrScanner">QR Scanner Appears Here</div>
+    <div id="upiAlert"></div>
+    <div id="paymentButtons">
+        <button id="closePayment" onclick="closePaymentModal()">Close</button>
+        <button id="payNow" onclick="payNow()">Pay Now</button>
+    </div>
+</div>
+
+<div id="successAlert">
+    <div class="success-circle">
+        <svg viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="25" fill="none"/>
+            <path fill="none" d="M14 27 L22 35 L38 19"/>
+        </svg>
+    </div>
+    <h2>Payment Successful!🎉</h2>
+    <button id="successOk" onclick="closeSuccess()">OK</button>
+</div>
+
+<div id="loadingAlert">
+    <div class="dot-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+    <h3>Generating platform ticket...</h3>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    let station = localStorage.getItem("station");
+    let personsText = localStorage.getItem("persons");
+
+    if(!station || !personsText){
+        alert("No booking data found!");
+        window.location.href = "platfrom.html";
+        return;
+    }
+
+    let persons = Number(personsText);
+    if(isNaN(persons) || persons <= 0){
+        persons = 1;
+    }
+
+    let farePerPerson = 10;
+    let totalFare = persons * farePerPerson;
+
+    document.getElementById("showStation").innerText =
+        "Station Name: " + station;
+
+    document.getElementById("showPersons").innerText =
+        "No. of Persons: " + persons;
+
+    document.getElementById("showFare").innerText =
+        "Total Fare: ₹" + totalFare;
+});
+
+// BACK BUTTON
+function goBack(){ window.location.href = "platfrom.html"; }
+
+// PAYMENT MODAL VARIABLES
+var paymentModal = document.getElementById("paymentModal");
+var upiSelect = document.getElementById("upiSelect");
+var qrScanner = document.getElementById("qrScanner");
+var successAlert = document.getElementById("successAlert");
+var upiAlert = document.getElementById("upiAlert");
+var loadingAlert = document.getElementById("loadingAlert");
+
+// OPEN PAYMENT MODAL
+function openPayment(){
+    paymentModal.style.display='block';
+    qrScanner.style.display='none';
+    upiSelect.value='';
+    upiAlert.style.display='none';
+}
+
+// SHOW QR
+function showQR(){
+    if(upiSelect.value){
+        qrScanner.style.display='flex';
+        qrScanner.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;z-index:1;">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI:${upiSelect.value}" 
+                     style="width:200px;height:200px;margin-bottom:15px;"/>
+                <span style="color:#003366;font-size:20px;">Scan with ${upiSelect.value}</span>
+            </div>
+        `;
+    } else {
+        qrScanner.style.display='none';
+        qrScanner.innerHTML='';
+    }
+}
+
+// CLOSE PAYMENT MODAL
+function closePaymentModal(){
+    paymentModal.style.display='none';
+    upiSelect.value='';
+    qrScanner.style.display='none';
+    qrScanner.innerHTML='';
+    upiAlert.style.display='none';
+}
+
+// PAY NOW
+function payNow(){
+    if(!upiSelect.value){
+        upiAlert.style.display='block';
+        upiAlert.textContent = "⚠️ Please select a UPI method before scanning and paying!";
+        setTimeout(()=>{ upiAlert.style.display='none'; }, 3000);
+        return;
+    }
+    paymentModal.style.display='none';
+    successAlert.style.display='block'; 
+}
+
+// CLOSE SUCCESS & SHOW LOADING
+function closeSuccess(){
+    successAlert.style.display='none';
+    loadingAlert.style.display='block';
+    setTimeout(()=>{ window.location.href = "platfromreceipt.html"; }, 3000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Railway Home Page</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    background:url('images/steam.jpg') no-repeat center/cover;
+}
+
+.glass{
+    background:rgba(148, 186, 225, 0.039);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.35);
+}
+
+.center-box{
+    position:absolute;
+    top:35px;
+    left:60%;
+    transform:translateX(-50%);
+    width:1495px;
+    padding:70px;
+    border-radius:40px;
+}
+
+.center-box h2{
+    text-align:center;
+    font-size:80px;
+    margin-bottom:70px;
+    font-weight:bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: #000000;
+}
+
+.route-box{
+    display:flex;
+    align-items:center;
+    gap:30px;
+    margin-bottom:70px;
+}
+
+.field{
+    position:relative;
+    flex:1;
+}
+
+.field input{
+    width:100%;
+    height:100px;
+    border:none;
+    border-radius:25px;
+    padding:30px 30px 30px 80px;
+    font-size:35px;
+    background:rgba(255,255,255,0.75);
+    outline:none;
+}
+
+.field i{
+    position:absolute;
+    left:30px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:38px;
+    color:#004466;
+}
+
+.field label{
+    position:absolute;
+    top:50%;
+    left:80px;
+    transform:translateY(-50%);
+    font-size:36px;
+    color:#004466;
+    font-weight:bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    pointer-events:none;
+    transition:0.3s ease;
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label{
+    top:-14px;
+    left:82px;
+    font-size:36px;
+    padding:0 10px;
+    background:rgba(255,255,255,0.85);
+    border-radius:10px;
+}
+
+.suggestions{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:100%;
+    background: rgba(255,255,255,0.85);
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    max-height:250px;
+    overflow-y:auto;
+    z-index:200;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-family: 'Cambria', Georgia, serif;
+    font-size:30px;
+    color: #004466;
+    transition: all 0.3s ease;
+}
+
+.suggestions div{
+    padding:15px 25px;
+    cursor:pointer;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    border-radius:10px;
+}
+
+.suggestions div:hover,
+.suggestions div.current{
+    background: #0175a7cc;
+    color:white;
+    font-weight:bold;
+    transform: scale(1.02);
+}
+
+.arrow-box{
+    width:100px;
+    height:100px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:48px;
+    font-weight:bold;
+    border-radius:50%;
+    background:rgba(0,119,170,0.7);
+    box-shadow:0 10px 20px rgba(0,0,0,0.25);
+    cursor:pointer;
+    transition: transform 0.2s ease;
+    color:white;
+}
+
+.btn-group{
+    display:flex;
+    justify-content:center;
+}
+
+.action-btn{
+    padding:30px 110px;
+    font-size:52px;
+    border-radius:30px;
+    background: #0175a7bb;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-decoration:none;
+    display:inline-block;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.action-btn i{
+    margin-left:20px;
+}
+
+.action-btn:hover,
+.arrow-box:hover{
+    transform: scale(1.1);
+    background: #004466;
+}
+
+.navbar{
+    position:fixed;
+    top:290px;
+    left:-650px;
+    width:600px;
+    padding:60px 35px;
+    display:flex;
+    flex-direction:column;
+    gap:30px;
+    border-radius:35px;
+    background:rgba(60, 176, 234, 0.172);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 25px 50px rgba(0,0,0,0.35);
+    transition:0.4s ease;
+    z-index:1000;
+}
+
+.navbar.active{
+    left:30px;
+}
+
+.navbar a{
+    padding:50px 20px;
+    font-size:50px;
+    font-weight:bold;
+    text-decoration:none;
+    color:#0c0c0c;
+    border-radius:20px;
+    background:rgba(255, 255, 255, 0.501);
+    box-shadow:0 12px 25px rgba(0,0,0,0.25);
+    font-family: Cambria, Georgia, serif;
+    transition:0.25s ease;
+    display:flex;
+    align-items:center;
+}
+
+.navbar a:hover{
+    transform:translateX(12px) scale(1.05);
+    background:rgba(240, 242, 243, 0.651);
+}
+
+.navbar a i{
+    margin-right:20px;
+    font-size:55px;
+    color:#016792;
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+
+.hamburger {
+    position:fixed;
+    top:170px;
+    left:80px;
+    width:140px;
+    height:95px;
+    cursor:pointer;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding:20px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.25);
+    backdrop-filter: blur(12px);
+    box-shadow:0 8px 15px rgba(0,0,0,0.25);
+    z-index:1001;
+}
+
+.hamburger span {
+    height:6px;
+    width:90%;
+    background: #010c10;
+    border-radius:6px;
+    transition: all 0.4s ease;
+}
+
+.hamburger:hover span {
+    transform: scaleX(1.2);
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px,8px);
+}
+.hamburger.active span:nth-child(2) {
+    opacity:0;
+}
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px,-8px);
+}
+
+.ticket-hub-box {
+    position:fixed;
+    top:50px;
+    left:31px;
+    padding:20px 35px;
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
+    border-radius:12px;
+    font-size:45px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+    color:#010c10;
+    box-shadow:0 8px 15px rgba(0,0,0,0.25);
+    z-index:1002;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="ticket-hub-box">Ticket Hub</div>
+
+<!-- HAMBURGER MENU -->
+<div class="hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<!-- FLOATING LEFT NAVBAR -->
+<div class="navbar" id="navbar">
+    <a href="#"><i class="fa-solid fa-train"></i> Journey Ticket</a>
+    <a href="platfrom.html"><i class="fa-solid fa-ticket-simple"></i> Platform Ticket</a>
+    <a href="tickethistory.html"><i class="fa-solid fa-file-invoice"></i> Booking History</a>
+    <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+    <a href="about.html"><i class="fa-solid fa-circle-info"></i> About</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="glass center-box">
+    <h2><i class="fa-solid fa-train"></i> Ticket Booking</h2>
+
+    <div class="route-box">
+        <div class="field">
+            <i class="fa-solid fa-train"></i>
+            <input type="text" placeholder=" " required id="fromStation" autocomplete="off">
+            <label>Depart From Station</label>
+            <div class="suggestions" id="fromSuggestions"></div>
+        </div>
+
+        <div class="arrow-box"><i class="fa-solid fa-right-left"></i></div>
+
+        <div class="field">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <input type="text" placeholder=" " required id="toStation" autocomplete="off">
+            <label>Going To Station</label>
+            <div class="suggestions" id="toSuggestions"></div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+       <a href="#" onclick="checkStations()" class="action-btn">
+   Get Fare <i class="fa-solid fa-train"></i>
+</a>
+
+    </div>
+</div>
+
+<script>
+    function toggleNav() {
+    const hamburger = document.getElementById("hamburger");
+    const navbar = document.getElementById("navbar");
+
+    hamburger.classList.toggle("active");
+    navbar.classList.toggle("active");
+}
+
+// ===== ONLY STATIONS (NO DISTANCE ANYWHERE) =====
+const stations = [
+  "Hyderabad Deccan","Solapur Junction","Daund Junction","Pune Junction","Lonavala","Kalyan Junction","Mumbai Central",
+  "New Delhi","H.Nizamuddin","Agra","Surat","Dadar Central","Howrah Junction","Hubballi Junction","Hazur Shaib Nanded",
+  "Bengaluru","Kalaburagi Junction","Chennai","Patas","Kedgaon","Yevat","Uruli","Loni","Manjari",
+  "Hadapsar","Shivajinagar","Khadki","Pimpri","Akurdi","Talegaon","Wadi Junction","Kurduwadi Junction"
+];
+
+// ===== AUTOCOMPLETE FUNCTION =====
+function autocomplete(inputId, suggestionsId, list){
+  const input = document.getElementById(inputId);
+  const suggestionsBox = document.getElementById(suggestionsId);
+
+  input.addEventListener("input", ()=> {
+    const value = input.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+    if(!value) return;
+
+    const filtered = list.filter(st =>
+      st.toLowerCase().startsWith(value)
+    );
+
+    filtered.forEach(station => {
+      const div = document.createElement("div");
+      div.textContent = station;
+      div.addEventListener("click", ()=> {
+        input.value = station;
+        suggestionsBox.innerHTML = "";
+      });
+      suggestionsBox.appendChild(div);
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if(e.target !== input) suggestionsBox.innerHTML = "";
+  });
+}
+
+// ===== INITIALIZE AUTOCOMPLETE =====
+autocomplete("fromStation", "fromSuggestions", stations);
+autocomplete("toStation", "toSuggestions", stations);
+
+// ===== SAVE STATIONS & GO TO FARE PAGE =====
+document.querySelector(".action-btn").addEventListener("click", function(){
+  const from = document.getElementById("fromStation").value.trim();
+  const to = document.getElementById("toStation").value.trim();
+
+  if(from === "" || to === ""){
+    alert("⚠️ Please fill both From and To stations!");
+    return;
+  }
+
+  // Save ONLY stations (NO DISTANCE ANYMORE)
+  localStorage.setItem("fromStation", from);
+  localStorage.setItem("toStation", to);
+
+  // Go to fare page
+  window.location.href = "fare.html";
+});
+</script>
+</body>
+</html>

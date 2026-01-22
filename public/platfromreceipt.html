@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Platform Ticket Receipt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ---------------- BASE RESET ---------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* ---------------- BODY AND BACKGROUND ---------------- */
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-end; /* Move container to right */
+    align-items: center;
+    padding-right: 1170px;
+    background: url("images/station.jpg") no-repeat center center / cover;
+}
+
+/* ---------------- CONTAINER (GLASS EFFECT) ---------------- */
+.container {
+    width: 850px;
+    max-width: 105%;
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 40px;
+    padding: 42px;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.074);
+}
+
+/* ---------------- HEADER ---------------- */
+.header {
+    background: rgba(255, 255, 255, 0.071);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 28px;
+    padding: 35px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h2 {
+    color: #e8eaeb;
+    font-size: 75px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-bottom: 25px;
+}
+
+/* ---------------- TICKET INNER GLASS ---------------- */
+.ticket {
+    margin-top: 0;
+    background: rgba(255, 255, 255, 0.048);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 28px 60px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* ---------------- SECTIONS ---------------- */
+.section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px 30px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between; /* text left, fare right */
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    font-size: 40px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+    color: #f9faf8;
+}
+
+.section.center {
+    justify-content: center;
+    font-size: 38px;
+}
+
+/* ---------------- INFO TEXT ---------------- */
+.info {
+    font-size: 28px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-top: 25px;
+    color: #ea1313;
+    line-height: 1.8;
+}
+
+/* ---------------- BUTTONS ---------------- */
+.buttons {
+    margin-top: 46px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    padding: 29px 90px;
+    border-radius: 22px;
+    border: none;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    cursor: pointer;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: #fff;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+*:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h2>HAPPY JOURNEY</h2>
+    </div>
+
+    <div class="ticket">
+
+        <!-- PLATFORM TICKET WITH FARE SPACED -->
+        <div class="section">
+            <span id="receiptTicketText">Platform Ticket:</span>
+            <span id="receiptTicketFare">₹0.00</span>
+        </div>
+
+        <div class="section center">
+            Ticket No : <span id="ticketNo">--</span>
+        </div>
+
+        <div class="section">
+            <span>Station :</span>
+            <span id="receiptStation">--</span>
+        </div>
+
+        <div class="section">
+            <span>No. of Persons :</span>
+            <span id="receiptPersons">--</span>
+        </div>
+
+        <div class="section">
+            <span>Valid For :</span>
+            <span>2 Hours</span>
+        </div>
+
+        <div class="section">
+            <span>Booking Time :</span>
+            <span id="receiptTime">--</span>
+        </div>
+
+        <div class="section">
+            <span>Booking Date :</span>
+            <span id="receiptDate">--</span>
+        </div>
+
+        <div class="info">
+            Platform ticket is valid for station entry only.<br>
+            No refund is applicable after booking.
+        </div>
+
+        <div class="buttons">
+            <button class="btn" onclick="saveReceipt()">DONE</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function generateTicketNo() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let ticket = "PT"; 
+    for (let i = 0; i < 6; i++) {
+        ticket += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return ticket;
+}
+
+
+document.getElementById("ticketNo").innerText = generateTicketNo();
+
+document.addEventListener("DOMContentLoaded", function(){
+    let station = localStorage.getItem("station");
+    let personsText = localStorage.getItem("persons");
+
+    if (!station || !personsText) {
+        alert("No booking data found!");
+        window.location.href = "platfrom.html";
+        return;
+    }
+
+    let persons = Number(personsText);
+    let farePerPerson = 10;
+    let totalFare = persons * farePerPerson;
+
+    // Show Platform Ticket with proper spacing
+    document.getElementById("receiptTicketText").innerText = `Platform Ticket:`;
+    document.getElementById("receiptTicketFare").innerText = `₹${totalFare}.00`;
+
+    document.getElementById("receiptStation").innerText = station;
+    document.getElementById("receiptPersons").innerText = persons;
+
+    let now = new Date();
+    let time = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    let date = now.getDate().toString().padStart(2, '0') + '-' +
+               (now.getMonth() + 1).toString().padStart(2, '0') + '-' +
+               now.getFullYear();
+
+    document.getElementById("receiptTime").innerText = time;
+    document.getElementById("receiptDate").innerText = date;
+});
+
+// ---------------- SAVE RECEIPT TO DB ----------------
+async function saveReceipt() {
+    const receiptData = {
+        platformTicket: document.getElementById("receiptTicketText").innerText + " " + 
+                        document.getElementById("receiptTicketFare").innerText,
+        ticketNo: document.getElementById("ticketNo").innerText,
+        station: document.getElementById("receiptStation").innerText,
+        noOfPersons: parseInt(document.getElementById("receiptPersons").innerText),
+        validFor: "2 Hours",
+        bookingTime: document.getElementById("receiptTime").innerText,
+        bookingDate: document.getElementById("receiptDate").innerText,
+        totalFare: parseInt(document.getElementById("receiptTicketFare").innerText.replace('₹',''))
+    };
+
+    try {
+        const response = await fetch('/api/receipts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(receiptData)
+        });
+
+        if (response.ok) {
+            alert("✅ Your Ticket Receipt is Saved!");
+            window.location.href = "home.html"; // Redirect after save
+        } else {
+            const errorData = await response.json();
+            alert("Error saving receipt: " + errorData.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error connecting to server.");
+    }
+}
+</script>
+</body>
+</html>

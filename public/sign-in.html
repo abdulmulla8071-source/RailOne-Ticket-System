@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Train Sign-In</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    padding-top:130px;
+    min-height:100vh;
+    font-family:Arial, sans-serif;
+    background:url('images/train_sunset.jpg') no-repeat center/cover;
+}
+
+.top-bar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:130px;
+    background:rgba(15,15,15,.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+}
+
+.top-bar div {
+    font-family:'Cinzel', serif;
+    font-size:60px;
+    font-weight:800;
+    color:#fff;
+    animation: popup 4s ease-out forwards;
+}
+
+.top-bar .india-text {
+    color: inherit;
+}
+.top-bar .india-text span:nth-child(1){ color:#FF9933; }
+.top-bar .india-text span:nth-child(2){ color:#FFFFFF; }
+.top-bar .india-text span:nth-child(3){ color:#138808; }
+.top-bar .india-text span:nth-child(4){ color:#FF9933; }
+.top-bar .india-text span:nth-child(5){ color:#FFFFFF; }
+.top-bar .india-text span:nth-child(6){ color:#138808; }
+
+@keyframes popup{
+    from{transform:scale(.5);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
+.box{
+    width:650px;
+    padding:90px;
+    border-radius:25px;
+    background:rgba(255,200,150,.45);
+    box-shadow:0 18px 89px rgba(0,0,0,.25);
+    text-align:center;
+    margin-top:110px;
+    margin-left:975px;
+}
+
+.box h2{
+    font-size:65px;
+    margin:0 0 16px;
+    font-family:Georgia,serif;
+}
+
+.box p{
+    font-size:21px;
+    margin-bottom:40px;
+    font-weight:bold;
+    color:#0e0703;
+}
+
+.field{
+    position: relative;
+    width: 90%;
+    margin: 0 auto 34px;
+}
+
+.field input,
+.field select{
+    width: 100%;
+    height: 70px;
+    padding: 0 19px;
+    font-size:26px;
+    border:none;
+    border-radius:16px;
+    background:rgba(245, 238, 228, 0.8);
+    outline:none;
+}
+
+.field label{
+    position: absolute;
+    top: 50%;
+    left: 19px;
+    transform: translateY(-50%);
+    font-size:30px;
+    color:#333;
+    pointer-events: none;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    transition: 0.3s ease;
+    padding: 0 5px;
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field select:focus + label,
+.field select:not([value=""]) + label{
+    top: -14px;
+    left: 15px;
+    font-size:20px;
+    color:#000;
+}
+
+.box button{
+    width:100%;
+    height:88px;
+    border:none;
+    border-radius:18px;
+    font-size:39px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+    background:#f59d3e;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.box button:hover{
+    background:#e68a2b;
+}
+
+.box .login{
+    margin-top:25px;
+    font-size:30px;
+}
+
+.box a{
+    text-decoration:none;
+    font-weight:bold;
+    color:#000;
+}
+
+input:-webkit-autofill{
+    -webkit-box-shadow:0 0 0 30px rgba(244,191,123,.8) inset !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <div>
+        WELCOME TO <span class="india-text">
+            <span>I</span><span>N</span><span>D</span><span>I</span><span>A</span><span>N</span>
+        </span> RAILWAYS 🚆
+    </div>
+</div>
+
+<div class="box">
+    <h2>Create Account</h2>
+    <p>Create your beautiful train journey account</p>
+
+    <form id="signupForm">
+
+        <div class="field">
+            <input type="text" placeholder=" " required id="fullName">
+            <label>Enter Full Name</label>
+        </div>
+
+        <div class="field">
+            <input type="email" placeholder=" " required id="email">
+            <label>Enter Email</label>
+        </div>
+
+        <div class="field">
+            <input type="text" placeholder=" " required maxlength="10" id="mobileNumber">
+            <label>Enter Mobile Number</label>
+        </div>
+
+        <div class="field">
+            <input type="text" placeholder=" " required id="userId">
+            <label>Create User ID</label>
+        </div>
+
+        <div class="field">
+            <input type="password" placeholder=" " required id="password">
+            <label>Enter Password</label>
+        </div>
+
+        <div class="field">
+            <input type="password" placeholder=" " required id="confirmPassword">
+            <label>Enter Confirm Password</label>
+        </div>
+
+        <div class="field">
+            <select required id="gender">
+                <option value="" disabled selected hidden></option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+            <label>Gender</label>
+        </div>
+
+        <button type="submit">Create Account</button>
+
+    </form>
+
+    <div class="login">
+        Already have an account? <a href="login.html">Login</a>
+    </div>
+</div>
+
+<script>
+// Allow only numbers in mobile input
+document.getElementById('mobileNumber').addEventListener('input', function(){
+    this.value = this.value.replace(/[^0-9]/g,'');
+});
+
+// Handle form submission
+document.getElementById("signupForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const btn = this.querySelector("button");
+    btn.disabled = true;
+    btn.textContent = "Creating...";
+
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+    if(password !== confirmPassword){
+        alert("❌ Uh-oh! Your passwords don’t match.");
+        btn.disabled = false;
+        btn.textContent = "Create Account";
+        return;
+    }
+
+    const data = {
+        fullName: document.getElementById("fullName").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        mobile: document.getElementById("mobileNumber").value.trim(),
+        userId: document.getElementById("userId").value.trim(),
+        password: password,
+        gender: document.getElementById("gender").value
+    };
+
+    if(data.mobile.length !== 10){
+        alert("❌ Mobile number must be 10 digits.");
+        btn.disabled = false;
+        btn.textContent = "Create Account";
+        return;
+    }
+
+    try {
+        const res = await fetch("/api/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if(res.ok){
+             // Save existing user details to localStorage
+    localStorage.setItem("fullName", data.fullName);
+    localStorage.setItem("email", data.email);
+    localStorage.setItem("mobile", data.mobile);
+    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("password", data.password);
+    localStorage.setItem("gender", data.gender);
+
+    // Save DOB and City in localStorage (hidden)
+    localStorage.setItem("dob", "18-06-2005");          // user DOB
+    localStorage.setItem("city", "Pune, Maharashtra");  
+    
+            alert("✅ Your Account is created successfully!🎉 Now Login!");
+            window.location.href = "login.html";
+        } else {
+            alert(result.message || "❌ Something went wrong!");
+        }
+
+    } catch(err){
+        alert("⚠️ Backend not running! Start your server.");
+        console.error(err);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Create Account";
+    }
+});
+
+</script>
+
+
+</body>
+</html>

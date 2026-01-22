@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Profile | RailEase</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color:#fff;
+}
+
+.profile-box{
+    width:100%;
+    max-width:980px;
+    padding:90px 40px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.08), rgba(0,0,0,0.25));
+    backdrop-filter:blur(14px);
+    border-radius:30px;
+    border:1px solid rgba(255,255,255,0.12);
+    box-shadow:0 18px 45px rgba(0,0,0,0.5);
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+}
+
+.profile-header{
+    text-align:center;
+    padding-bottom:18px;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+}
+
+.profile-header h2{
+    font-size:85px;
+    color:#ffcb05;
+}
+
+.details-box{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.detail-card{
+    padding:30px;
+    background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(0,0,0,0.25));
+    border-radius:20px;
+    border-left:5px solid #ffcb05;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:35px;
+    font-weight:bold;
+}
+
+.password-box{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.password-box button{
+    padding:8px 16px;
+    font-size:16px;
+    font-weight:bold;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#1fa2ff;
+    color:#fff;
+}
+
+.bottom-bar{
+    display:flex;
+    gap:55px;
+    margin-top:25px;
+}
+
+.logout-btn,
+.close-btn{
+    flex:1;
+    padding:35px;
+    font-size:46px;
+    font-weight:bold;
+    border:none;
+    border-radius:16px;
+    cursor:pointer;
+}
+
+.logout-btn{
+    background:linear-gradient(135deg,#ff512f,#dd2476);
+    color:#fff;
+}
+
+.close-btn{
+    background:linear-gradient(135deg,#1fa2ff,#12d8fa);
+    color:#fff;
+}
+
+.watermark{
+    text-align:center;
+    font-size:25px;
+    opacity:0.6;
+}
+
+.alert-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.alert-box{
+    background:#2b2b45;
+    padding:150px;
+    width:850px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,0.6);
+}
+
+.alert-box h3{
+    font-size:55px;
+    color:#ffb005;
+    margin-bottom:35px;
+}
+
+.alert-box p{
+    font-size:30px;
+    line-height:1.5;
+    margin-bottom:25px;
+}
+
+.alert-actions{
+    display:flex;
+    gap:45px;
+}
+
+.alert-actions button{
+    flex:1;
+    padding:35px;
+    font-size:35px;
+    font-weight:bold;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+.ok-btn{
+    background:#ff512f;
+    color:#fff;
+}
+
+.cancel-btn{
+    background:#1fa2ff;
+    color:#fff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="profile-box">
+
+    <div class="profile-header">
+        <h2>Your Profile</h2>
+    </div>
+
+    <div class="details-box">
+        <div class="detail-card"><span>Name :</span><b id="fullName">Loading...</b></div>
+        <div class="detail-card"><span>Mobile.No :</span><b id="mobile">Loading...</b></div>
+        <div class="detail-card"><span>Email :</span><b id="email">Loading...</b></div>
+        <div class="detail-card"><span>Date of Birth :</span><b id="dob">Loading...</b></div>
+        <div class="detail-card"><span>Gender :</span><b id="gender">Loading...</b></div>
+        <div class="detail-card"><span>City :</span><b id="city">Loading...</b></div>
+        <div class="detail-card"><span>User ID :</span><b id="userId">Loading...</b></div>
+
+        <div class="detail-card">
+            <span>Password :</span>
+            <div class="password-box">
+                <b id="password">********</b>
+                <button onclick="togglePassword()">Show</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="logout-btn" onclick="openLogoutAlert()">Logout</button>
+        <button class="close-btn" onclick="goHome()">Close</button>
+    </div>
+
+    <div class="watermark">© Indian RailOne Ticket System</div>
+</div>
+
+<div class="alert-overlay" id="logoutAlert">
+    <div class="alert-box">
+        <h3>Are you sure you want to Log Out?</h3>
+        <p>
+            Thank you for using <b>RailOne</b>.<br>
+            Have a safe and pleasant journey!
+        </p>
+        <div class="alert-actions">
+            <button class="cancel-btn" onclick="closeAlert()">Cancel</button>
+            <button class="ok-btn" onclick="confirmLogout()">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* Load user data from localStorage */
+window.addEventListener("DOMContentLoaded", function(){
+    const fullName = localStorage.getItem("fullName") || "-";
+    const mobile = localStorage.getItem("mobile") || "-";
+    const email = localStorage.getItem("email") || "-";
+    const dob = localStorage.getItem("dob") || "-";
+    const gender = localStorage.getItem("gender") || "-";
+    const city = localStorage.getItem("city") || "-";
+    const userId = localStorage.getItem("userId") || "-";
+    const password = localStorage.getItem("password") || "-";
+
+    document.getElementById("fullName").textContent = fullName;
+    document.getElementById("mobile").textContent = mobile;
+    document.getElementById("email").textContent = email;
+    document.getElementById("dob").textContent = dob;
+    document.getElementById("gender").textContent = gender;
+    document.getElementById("city").textContent = city;
+    document.getElementById("userId").textContent = userId;
+
+    window.realPassword = password; // for toggle password
+});
+
+/* Password Toggle */
+let visible = false;
+function togglePassword(){
+    const pass = document.getElementById("password");
+    const btn = event.target;
+    if(visible){
+        pass.textContent = "********";
+        btn.textContent = "Show";
+    }else{
+        pass.textContent = window.realPassword;
+        btn.textContent = "Hide";
+    }
+    visible = !visible;
+}
+
+/* Close Button */
+function goHome(){
+    window.location.href = "home.html";
+}
+
+/* Logout Alert */
+function openLogoutAlert(){
+    document.getElementById("logoutAlert").style.display = "flex";
+}
+
+function closeAlert(){
+    document.getElementById("logoutAlert").style.display = "none";
+}
+
+function confirmLogout(){
+    localStorage.clear(); // optional: clear user data
+    window.location.href = "sign-in.html";
+}
+</script>
+
+</body>
+</html>

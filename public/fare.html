@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Train Ticket Booking</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: url('images/train_water.jpg') center/cover fixed;
+}
+.booking-box{
+    max-width: 895px;
+    margin: 100px 0 0 850px;
+    padding: 67px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 50px 95px rgba(0,0,0,0.35);
+}
+.header{
+    background: rgba(43,217,243,0.85);
+    text-align: center;
+    padding: 20px;
+    font-size: 40px;
+    gap: 35px;
+    font-weight: bold;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    font-family: Cambria, Georgia, serif;
+}
+.row{
+    display: flex;
+    gap: 55px;
+    margin-bottom: 25px;
+}
+.box{ flex: 1; }
+label{
+    font-size: 35px;
+    font-weight: bold;
+    font-family: Georgia, serif;
+}
+select{
+    width: 109%;
+    padding: 30px;
+    margin-top: 6px;
+    font-size: 31px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background: rgba(234,240,242,0.65);
+    outline: none;
+    font-family: Cambria, Georgia, serif;
+}
+.summary{
+    margin-top: 24px;
+    padding: 18px;
+    background: rgba(234,240,242,0.65);
+    border-radius: 14px;
+}
+.summary div{
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: Georgia, serif;
+}
+.fare-box{
+    margin-top: 30px;
+    padding: 30px;
+    background: rgba(244,245,246,0.8);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: Georgia, serif;
+}
+button{
+    width: 100%;
+    margin-top: 30px;
+    padding: 35px;
+    font-size: 37px;
+    color: #fff;
+    border: none;
+    border-radius: 34px;
+    cursor: pointer;
+    background: linear-gradient(to right,#239ef5,#19c9f0);
+}
+button:hover{ opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="booking-box">
+
+<div class="header">NORMAL BOOKING<br>FILL THE DETAILS</div>
+
+<form id="bookingForm">
+
+<div class="row">
+<div class="box">
+<label>Adult</label>
+<select id="adult">
+<option value="0">-- ZERO (0) --</option>
+<option value="1">ONE (1)</option>
+<option value="2">TWO (2)</option>
+<option value="3">THREE (3)</option>
+<option value="4">FOUR (4)</option>
+<option value="5">FIVE (5)</option>
+</select>
+</div>
+
+<div class="box">
+<label>Child</label>
+<select id="child">
+<option value="0">-- ZERO (0) --</option>
+<option value="1">ONE (1)</option>
+<option value="2">TWO (2)</option>
+<option value="3">THREE (3)</option>
+<option value="4">FOUR (4)</option>
+</select>
+</div>
+</div>
+
+<div class="row">
+<div class="box">
+<label>Class</label>
+<select id="classType">
+<option>Second (II)</option>
+</select>
+</div>
+
+<div class="box">
+<label>Ticket Type</label>
+<select id="ticketType">
+<option>Journey (J)</option>
+</select>
+</div>
+</div>
+
+<div class="row">
+<div class="box">
+<label>Train Type</label>
+<select id="trainType">
+<option value="">-- Select Train Type --</option>
+<option>Superfast (SF)</option>
+<option>Mail Express (ME)</option>
+<option>MMTS (T)</option>
+<option>Passenger (P)</option>
+</select>
+</div>
+
+<div class="box">
+<label>Payment Type</label>
+<select id="paymentType">
+<option value="">-- Select Payment Type --</option>
+<option>UPI</option>
+<option>Credit Card</option>
+<option>Rwallet</option>
+<option>Net Banking</option>
+</select>
+</div>
+</div>
+
+<div class="summary">
+<div id="sourceStation">Source Station: Daund Jn.</div>
+<div id="destinationStation">Destination Station: Pune Jn.</div>
+<div id="summaryPassengers">Adult: 0 | Child: 0</div>
+<div>Class: Second (II)</div>
+<div>Ticket Type: Journey</div>
+<div id="summaryTrain">Train Type: -</div>
+</div>
+<div class="fare-box" id="fareBox">Total Fare: ₹0 /-</div>
+<button type="submit">BOOK TICKET</button>
+</form>
+</div>
+
+<script>
+const adult = document.getElementById("adult");
+const child = document.getElementById("child");
+const trainType = document.getElementById("trainType");
+const paymentType = document.getElementById("paymentType");
+
+const summaryBox = document.querySelector(".summary");
+const summaryPassengers = document.getElementById("summaryPassengers");
+const summaryTrain = document.getElementById("summaryTrain");
+const fareBox = document.getElementById("fareBox");
+
+summaryBox.style.display = "none";
+fareBox.style.display = "none";
+
+const fromStation = localStorage.getItem("fromStation") || "Hyderabad";
+const toStation = localStorage.getItem("toStation") || "Solapur";
+
+summaryBox.querySelector("div:nth-child(1)").innerText =
+  `Route: ${fromStation} → ${toStation}`;
+
+const longRouteFare = {
+  "Hyderabad Deccan Nampally_Wadi": 150,
+  "Hyderabad Deccan_Solapur Junction": 250,
+  "Hyderabad Deccan_Daund Junction": 300,
+  "Hyderabad Deccan_Pune Junction": 360,
+  "Hyderabad Deccan_Lonavala": 390,
+  "Hyderabad Deccan_Kalyan Junction": 550,
+  "Hyderabad Deccan_Mumbai Central": 650,
+  "Mumbai Central_Hyderabad Deccan ":650,
+  "Daund Junction_Hyderabad Deccan ":300,
+  "Hyderabad Deccan_Lingampalli":40,
+  "Lingampalli_Hyderabad Deccan":40,
+
+  "Mumbai Central_New Delhi":750,
+  "Mumbai Central_H Nizamuddin":710,
+  "Mumbai Central_Ratlam Junction":600,
+  "Mumbai Central_Agra":500,
+  "Howrah Junction_Mumbai Central":700,
+  "Howrah Junction_Kaylan Junction":650,
+  "Howrah Junction_Pune Junction":600,
+  "Howrah Junction_Daund Junction":560,
+  "Hubballi Junction_Solapur Junction":450,
+  "Hubballi Junction_Daund Junction":490,
+  "Hubballi Junction_Pune Junction":530,
+  "Hubballi Junction_Kalyan Junction":590,
+
+  "Bengaluru_Kalaburagi Junction": 350,
+  "Bengaluru_Solapur Junction": 350,
+  "Bengaluru_Daund Junction": 400,
+  "Bengaluru_Pune Junction": 550,
+  "Bengaluru_Kalyan Junction": 600,
+  "Bengaluru_Mumbai Central": 670,
+  "Daund Junction_Pune Junction":90,
+  "Pune Junction_Daund Junction":90,
+  "Hazur Shaib Nanded_Solapur Junction":280,
+  "Hazur Shaib Nanded_Daund Junction":320,
+  "Hazur Shaib Nanded_Pune Junction":390,
+
+  "Chennai_Daund Junction": 500,
+  "Chennai_Pune Junction": 580,
+  "Chennai_Kalyan Junction": 680,
+  "Chennai_Mumbai Central": 780,
+  "Daund_Mumbai Central":250,
+  "Pune Junction_Mumbai":200,
+  "Pune Junction_Lonavala":180,
+  "Pune Junction_Kalyan Junction":120,
+  "Solapur Junction_Mumbai Central": 350,
+  "Solapur Junction_Daund Junction": 105,
+  "Solapur Junction_Kurduwadi Junction": 80,
+  "Solapur Junction_Lonavala":250,
+  "Solapur Junction_Kalyan Junction":300,
+};
+
+const localRouteFare = {
+  "Solapur Junction_Daund Junction": 105,
+  "Daund Junction_Patas": 20,
+  "Daund Junction_Kedgaon": 30,
+  "Danund Junction_Yevat": 40,
+  "Daund Junction_Uruli": 55,
+  "Daund Junction_Loni": 60,
+  "Daund Junction_Manjari": 65,
+  "Daund Junction_Hadapsar": 75,
+  "Pune Junction_Shivajinagar": 10,
+  "Pune Junction_Khadki": 10,
+  "Pune Junction_Pimpri": 30,
+  "Pune Junction_Akurdi": 55,
+  "Pune Junction_Talegaon": 65,
+  "Daund Junction_Pune Junction":85,
+  "pune Junction_Daund Junction":85
+};
+
+function isRouteAllowed(from, to, train){
+
+  const key1 = `${from}_${to}`;
+  const key2 = `${to}_${from}`;
+
+  if(train === "Superfast (SF)" || train === "Mail Express (ME)"){
+    return (longRouteFare[key1] || longRouteFare[key2]);
+  }
+
+  if(train === "MMTS (T)" || train === "Passenger (P)"){
+    return (localRouteFare[key1] || localRouteFare[key2]);
+  }
+
+  return null;
+}
+
+function getRouteFare(from, to, train){
+
+  const key1 = `${from}_${to}`;
+  const key2 = `${to}_${from}`;
+
+  if(train === "Superfast (SF)" || train === "Mail Express (ME)"){
+    return longRouteFare[key1] || longRouteFare[key2];
+  }
+
+  if(train === "MMTS (T)" || train === "Passenger (P)"){
+    return localRouteFare[key1] || localRouteFare[key2];
+  }
+
+  return null;
+}
+
+function calculateFare(){
+
+  const a = parseInt(adult.value) || 0;
+  const c = parseInt(child.value) || 0;
+
+  const allowedFare = isRouteAllowed(fromStation, toStation, trainType.value);
+
+  if(!allowedFare){
+    fareBox.innerText = "Route not available"; 
+    return 0;
+  }
+
+  const baseFare = getRouteFare(fromStation, toStation, trainType.value);
+
+  const adultFare = a * baseFare;
+  const childFare = c * (baseFare / 2);
+
+  const total = Math.round(adultFare + childFare);
+
+  summaryPassengers.innerText = `Adult: ${a} | Child: ${c}`;
+
+  summaryTrain.innerText =
+    `${fromStation} → ${toStation} | Train: ${trainType.value}`;
+
+  fareBox.innerText = `Total Fare: ₹${total}/-`;
+
+  return total;
+}
+
+adult.addEventListener("input", calculateFare);
+child.addEventListener("input", calculateFare);
+trainType.addEventListener("change", calculateFare);
+
+paymentType.addEventListener("change", function(){
+  if(paymentType.value !== ""){
+    summaryBox.style.display = "block";
+    fareBox.style.display = "block";
+    calculateFare();
+  } else {
+    summaryBox.style.display = "none";
+    fareBox.style.display = "none";
+  }
+});
+
+document.getElementById("bookingForm")
+.addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  const totalFare = calculateFare();
+
+  const bookingData = {
+    source: fromStation,
+    destination: toStation,
+    adult: adult.value,
+    child: child.value,
+    trainType : trainType.value,
+    paymentType: paymentType.value,
+    fare: totalFare
+  };
+
+  const response = await fetch("http://localhost:5000/api/book", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(bookingData)
+  });
+
+  const result = await response.json();
+
+  if(result.success){
+    alert("Ticket Booked Successfully!");
+    window.location.href = "confirm.html";
+  } else {
+    alert("Booking Failed!");
+  }
+});
+document.getElementById("bookingForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const a = parseInt(adult.value) || 0;
+    const c = parseInt(child.value) || 0;
+    const train = trainType.value;
+    const payment = paymentType.value;
+
+    if(a === 0 && c === 0 && train === "" && payment === ""){
+        alert("⚠️ Please fill all the details before booking!");
+        return;
+    }
+    const totalFare = calculateFare();
+
+    const bookingData = {
+        fromStation: fromStation,
+        toStation: toStation,
+        adult: a,
+        child: c,
+        classType: document.getElementById("classType").value,
+        ticketType: document.getElementById("ticketType").value,
+        trainType: train,
+        paymentType: payment,
+        totalFare: totalFare
+    };
+    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+
+    window.location.href = "confirm.html";
+});
+</script>
+</body>
+</html>

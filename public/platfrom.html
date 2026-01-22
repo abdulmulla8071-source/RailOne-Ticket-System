@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Platform Ticket</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    background:url("images/platform.jpg") no-repeat center/cover;
+}
+.glass{
+    background:rgba(180,210,255,0.30);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    box-shadow:0 20px 40px rgba(0,0,40,0.5);
+}
+.center-box{
+    position:absolute;
+    top:250px;
+    left:68%;
+    transform:translateX(-50%);
+    width:1070px;
+    padding:95px;
+    border-radius:35px;
+}
+.center-box h2{
+    text-align:center;
+    font-size:59px;
+    margin-bottom:70px;
+    color:#003366;
+}
+.field{
+    position:relative;
+    margin-bottom:55px;
+}
+.field input,
+.field select{
+    width:100%;
+    height:88px;
+    border:none;
+    border-radius:20px;
+    padding:28px 30px;
+    font-size:30px;
+    background:rgba(220,235,255,0.85);
+    outline:none;
+}
+.field label{
+    position:absolute;
+    top:50%;
+    left:30px;
+    transform:translateY(-50%);
+    font-size:30px;
+    color:#003366;
+    pointer-events:none;
+    transition:.3s;
+}
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field select:focus + label,
+.field select:valid + label{
+    top:-14px;
+    font-size:22px;
+    background:rgba(180,210,255,0.95);
+    padding:0 10px;
+    border-radius:10px;
+}
+.btn-group{
+    display:flex;
+    justify-content:center;
+}
+.action-btn{
+    width:80%;
+    padding:40px;
+    font-size:45px;
+    border-radius:28px;
+    background:linear-gradient(135deg,#004e92,#000428);
+    color:white;
+    font-weight:bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    cursor:pointer;
+    transition:transform 0.2s ease;
+}
+.warnings{
+    margin:45px auto 0; 
+    padding:20px 39px;
+    max-width:800px;    
+    background:rgba(255,255,255,0.65);
+    border-radius:22px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+.warnings p{
+    font-size:27px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color:#003366;
+    font-weight:600;
+    margin-bottom:10px;
+    line-height:1.4;
+}
+.warnings p:last-child{
+    margin-top:18px;
+    font-size:35px;
+
+    font-family:Cambria, Georgia, 'Times New Roman', serif;
+    color:#b00000;
+    font-weight:800;
+    text-align:center;
+}
+.navbar{
+    position:fixed;
+    top:290px;
+    left:-650px;
+    width:600px;
+    padding:60px 35px;
+    display:flex;
+    flex-direction:column;
+    gap:30px;
+    border-radius:35px;
+    background:rgba(0, 102, 153, 0.2);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 25px 50px rgba(0,0,0,0.35);
+    transition:0.4s ease;
+    z-index:1000;
+}
+.navbar.active{
+    left:30px;
+}
+.navbar a{
+    padding:50px 20px;
+    font-size:50px;
+    font-weight:bold;
+    text-decoration:none;
+    color:#05080a;
+    border-radius:20px;
+    background:rgba(255, 255, 255, 0.501);
+    box-shadow:0 12px 25px rgba(0,0,0,0.25);
+    font-family: Cambria, Georgia, serif;
+    transition:0.25s ease;
+    display:flex;
+    align-items:center;
+}
+.navbar a:hover{
+    transform:translateX(12px) scale(1.05);
+    background:rgba(255, 255, 255, 0.418);
+}
+.navbar a i{
+    margin-right:20px;
+    font-size:55px;
+    color:#0077aa;
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+.hamburger {
+    position:fixed;
+    top:170px;
+    left:80px;
+    width:140px;
+    height:95px;
+    cursor:pointer;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding:20px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.25);
+    backdrop-filter: blur(12px);
+    box-shadow:0 8px 15px rgba(0,0,0,0.25);
+    z-index:1001;
+}
+.hamburger span {
+    height:6px;
+    width:90%;
+    background: #010c10;
+    border-radius:6px;
+    transition: all 0.4s ease;
+}
+.hamburger:hover span {
+    transform: scaleX(1.2);
+}
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px,8px);
+}
+.hamburger.active span:nth-child(2) {
+    opacity:0;
+}
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px,-8px);
+}
+.ticket-hub-box {
+    position:fixed;
+    top:50px;
+    left:31px;
+    padding:20px 35px;
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
+    border-radius:12px;
+    font-size:45px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+    color:#010c10;
+    box-shadow:0 8px 15px rgba(0,0,0,0.25);
+    z-index:1002;
+    text-align:center;
+}
+#fillAlert{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:700px;
+    padding:60px;
+    background:rgba(255, 80, 80, 0.95);
+    color:white;
+    font-size:32px;
+    font-weight:bold;
+    text-align:center;
+    border-radius:25px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
+    z-index:2000;
+    animation:pop 0.3s ease;
+}
+#fillAlert p{
+    margin-top:20px;
+    font-size:22px;
+    font-weight:normal;
+    color:#ffe0e0;
+}
+@keyframes pop{
+    0%{transform:translate(-50%,-60%) scale(0.5); opacity:0;}
+    100%{transform:translate(-50%,-50%) scale(1); opacity:1;}
+}
+
+</style>
+</head>
+<body>
+<div class="ticket-hub-box">Ticket Hub</div>
+<div class="hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+<div class="navbar" id="navbar">
+    <a href="home.html"><i class="fa-solid fa-train"></i> Journey Ticket</a>
+    <a href="#"><i class="fa-solid fa-ticket-simple"></i> Platform Ticket</a>
+    <a href="tickethistory.html"><i class="fa-solid fa-file-invoice"></i> Booking History</a>
+    <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+    <a href="about.html"><i class="fa-solid fa-circle-info"></i> About</a>
+</div>
+<div class="glass center-box">
+    <h2>🎫 Platform Ticket</h2>
+   <div class="field">
+    <input type="text" id="station" list="stationSuggestions" placeholder=" ">
+    <label>Station Name / Code</label>
+</div>
+<datalist id="stationSuggestions"></datalist>
+    <div class="field">
+        <select id="persons" required>
+            <option value="" disabled selected hidden></option>
+            <option>One</option><option>Two</option>
+            <option>Three</option><option>Four</option>
+            <option>Five</option>
+        </select>
+        <label>Person(s)</label>
+    </div>
+    <div class="field">
+        <select id="paytype" required>
+            <option value="" disabled selected hidden></option>
+            <option>UPI</option><option>Wallet</option><option>Card</option>
+        </select>
+        <label>Payment Type</label>
+    </div>
+    <div class="btn-group">
+        <div class="action-btn" onclick="openPayment()">Book Platform Ticket</div>
+    </div>
+    <div class="warnings">
+        <p>* Use this option if you are outside station premises.</p>
+        <p>* Use Show Ticket option on mobile.</p>
+        <p>* Set GPS to high accuracy.</p>
+        <p>*** No cancellation allowed ***</p>
+    </div>
+</div>
+<div id="fillAlert">
+    <strong>Please fill the details first!</strong>
+    <p>Make sure to enter station, select number of persons, and choose a payment type before booking.</p>
+    <p>We don't want you missing your platform ticket </p>
+</div>
+<script>
+// --------- STATION AUTOSUGGEST (KEPT AS YOU WANTED) ---------
+const stationList = [
+  "Mumbai Central",
+  "Delhi Junction",
+  "Chennai Central",
+  "Howrah Junction",
+  "Bangalore City",
+  "Hyderabad Deccan",
+  "Pune Junction",
+  "Solapur Junction",
+  "Kalyan Junction",
+  "Lonavala",
+  "Jaipur Junction",
+  "Ahmedabad Junction",
+  "Daund Junction"
+];
+
+const stationInput = document.getElementById("station");
+const stationSuggestions = document.getElementById("stationSuggestions");
+
+stationInput.addEventListener("input", function(){
+    let value = this.value.toLowerCase();
+    stationSuggestions.innerHTML = "";
+
+    if(value.length > 0){
+        stationList
+        .filter(st => st.toLowerCase().includes(value))
+        .forEach(st => {
+            let option = document.createElement("option");
+            option.value = st;
+            stationSuggestions.appendChild(option);
+        });
+    }
+});
+
+// --------- CLEAN VALIDATION + REDIRECT (NO PAYMENT MODAL) ---------
+
+var station = document.getElementById("station");
+var persons = document.getElementById("persons");
+var paytype = document.getElementById("paytype");
+var fillAlert = document.getElementById("fillAlert");
+
+function toggleNav(){
+    document.getElementById("navbar").classList.toggle("active");
+    document.getElementById("hamburger").classList.toggle("active");
+}
+
+function openPayment(){
+    if(!station.value || !persons.value || !paytype.value){
+        fillAlert.style.display="block";
+        setTimeout(()=>{ fillAlert.style.display="none"; }, 2000);
+        return;
+    }
+
+    // Convert words to numbers
+    let personNumber = 1;
+
+    if(persons.value === "One") personNumber = 1;
+    else if(persons.value === "Two") personNumber = 2;
+    else if(persons.value === "Three") personNumber = 3;
+    else if(persons.value === "Four") personNumber = 4;
+    else if(persons.value === "Five") personNumber = 5;
+
+    // ✅ Store correct numeric value
+    localStorage.setItem("station", station.value);
+    localStorage.setItem("persons", personNumber);
+    localStorage.setItem("paytype", paytype.value);
+
+    window.location.href = "PlatfromPayment.html";
+}
+
+</script>
+</body>
+</html>

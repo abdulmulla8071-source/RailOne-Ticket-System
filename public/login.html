@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Train Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    padding-top:130px;
+    min-height:100vh;
+    font-family:Arial, sans-serif;
+    background:url('images/train_sunset.jpg') no-repeat center/cover;
+}
+
+.top-bar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:130px;
+    background:rgba(15,15,15,.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+}
+
+.top-bar div {
+    font-family:'Cinzel', serif;
+    font-size:60px;
+    font-weight:800;
+    color:#fff;
+    animation: popup 4s ease-out forwards;
+}
+
+@keyframes popup{
+    from{transform:scale(.5);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
+.box{
+    width:620px;
+    padding:100px;
+    border-radius:25px;
+    background:rgba(255,200,150,.45);
+    box-shadow:0 18px 89px rgba(0,0,0,.25);
+    text-align:center;
+    margin-top:400px;
+    margin-left:995px;
+}
+
+.box h2{
+    font-size:74px;
+    margin:0 0 16px;
+    font-family:Georgia,serif;
+}
+
+.box p{
+    font-size:25px;
+    margin-bottom:40px;
+    font-weight:bold;
+    color:#070403;
+}
+
+.field{
+    position: relative;
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.field input{
+    width: 100%;
+    height: 80px;
+    padding: 0 19px;
+    font-size:26px;
+    border:none;
+    border-radius:16px;
+    background:rgba(245, 238, 228, 0.8);
+    outline:none;
+}
+
+.field label{
+    position: absolute;
+    top: 50%;
+    left: 19px;
+    transform: translateY(-50%);
+    font-size:30px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color:#100b0b;
+    pointer-events: none;
+    transition: 0.3s ease;
+    padding: 0 5px;
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label{
+    top: -14px;
+    left: 15px;
+    font-size:20px;
+    color:#000;
+}
+
+.box button{
+    width:100%;
+    height:88px;
+    border:none;
+    border-radius:18px;
+    font-size:39px;
+    font-weight:bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background:#f59d3e;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.box button:hover{
+    background:#e68a2b;
+}
+
+.box .login{
+    margin-top:38px;
+    font-size:30px;
+}
+
+.box a{
+    text-decoration:none;
+    font-weight:bold;
+    color:#000;
+}
+
+input:-webkit-autofill{
+    -webkit-box-shadow:0 0 0 30px rgba(244,191,123,.8) inset !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <div>
+        WELCOME TO 
+        <span style="color:#FF9933;">I</span>
+        <span style="color:#FFFFFF;">N</span>
+        <span style="color:#138808;">D</span>
+        <span style="color:#FF9933;">I</span>
+        <span style="color:#FFFFFF;">A</span>
+         RAILWAYS 🚆
+    </div>
+</div>
+
+<div class="box">
+    <h2>Login</h2>
+    <p>Welcome to your beautiful train journey</p>
+
+    <div class="field">
+        <input type="text" placeholder=" " id="userId" required>
+        <label>Enter User ID</label>
+    </div>
+
+    <div class="field">
+        <input type="password" placeholder=" " id="password" required>
+        <label>Enter Password</label>
+    </div>
+
+    <button id="loginBtn">Login</button>
+
+    <div class="login">
+        Don’t have an account? <a href="sign-in.html">Sign-In</a>
+    </div>
+</div>
+
+<script>
+document.getElementById('loginBtn').addEventListener('click', async function(e){
+    e.preventDefault(); 
+
+    const userId = document.getElementById('userId').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if(userId === "" || password === ""){
+        alert("You must fill in both User ID and Password to board this train.");
+        return;
+    }
+
+    try {
+        const res = await fetch("http://localhost:5000/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, password })
+        });
+
+        const result = await res.json();
+
+        if(res.ok){
+            // ✅ ONLY THIS LINE ADDED — NOTHING ELSE CHANGED
+            localStorage.setItem("userId", userId);
+
+            alert("✅ Login successful! 🎉.👋 Welcome aboard, " + userId + "!");
+            window.location.href = "home.html";
+        } else {
+            alert("❌ " + result.message);
+        }
+
+    } catch(err){
+        alert("⚠️ Backend not running! Start your server.");
+        console.error(err);
+    }
+});
+</script>
+
+</body>
+</html>

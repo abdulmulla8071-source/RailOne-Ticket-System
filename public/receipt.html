@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ticket Receipt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* -------- YOUR CSS (UNCHANGED) -------- */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI", system-ui, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:url("images/old_train.jpg") no-repeat center center / cover;
+}
+
+.phone{
+    margin-left:1095px;
+    width:900px;
+    max-width:95%;
+    position:relative;
+}
+
+.header{
+    background:linear-gradient(135deg,#08c9ff,#079bac);
+    color:#050000;
+    padding:18px;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-align:center;
+    border-radius:28px 28px 0 0;
+}
+
+.sub-header{
+    background:rgba(194,184,240,0.85);
+    text-align:center;
+    padding:20px;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.ticket{
+    background:rgba(5,86,156,0.45);
+    padding:40px;
+    border-radius:0 0 28px 28px;
+}
+
+.details{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.detail-box{
+    background:rgba(3,242,246,0.5);
+    border-radius:18px;
+    padding:18px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:30px;
+    font-weight:bold;
+}
+
+.detail-center{
+    justify-content:center;
+    text-align:center;
+    font-size:33px;
+    font-weight: bold;
+}
+
+.double{
+    display:flex;
+    gap:18px;
+}
+
+.double .detail-box{
+    flex:1;
+}
+
+.btn-area{
+    margin-top:35px;
+    display:flex;
+    justify-content:center;
+}
+
+.btn{
+    padding:35px 280px;
+    border-radius:25px;
+    font-size:35px;
+    font-weight:bold;
+    cursor:pointer;
+    text-decoration:none;
+}
+
+.done{
+    background:linear-gradient(135deg,#f7971e,#ffd200);
+    color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+<div class="header">
+<h1>HAPPY JOURNEY</h1>
+<p>Your Ticket Booked Successfully</p>
+</div>
+
+<div class="sub-header">YOUR TICKET DETAILS</div>
+
+<div class="ticket">
+
+<div class="details">
+
+<div class="detail-box">
+<span>Booking Date</span>
+<span>--</span>
+</div>
+
+<div class="detail-box">
+<span>Fare</span>
+<span>₹50.00 /-</span>
+</div>
+
+<div class="detail-box">
+<span>Mobile</span>
+<span id="mobBox">8010784019</span>
+</div>
+
+<div class="detail-box">
+<span>UTS No</span>
+<span>XG8FE9C056</span>
+</div>
+
+<div class="double">
+<div class="detail-box">
+<strong>From : </strong><br>DAUND
+</div>
+<div class="detail-box">
+<strong>To : </strong><br>PUNE
+</div>
+</div>
+
+<div class="detail-box detail-center">
+Passengers : Adult 1 | Child 1
+</div>
+
+<div class="double">
+<div class="detail-box">
+<strong>Class</strong><br>SECOND
+</div>
+<div class="detail-box">
+<strong>Train Type</strong><br>SUPERFAST
+</div>
+</div>
+
+<div class="detail-box detail-center">
+SAC : 996411 &nbsp;&nbsp; | &nbsp;&nbsp; IR : 36AAAGM0289C1ZK
+</div>
+
+<div class="detail-box detail-center">
+Commence Journey Within 2 Hours of Booking
+</div>
+
+</div>
+
+<div class="btn-area">
+<a href="home.html" id="doneBtn" class="btn done">DONE</a>
+</div>
+
+</div>
+</div>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+
+const bookingData = JSON.parse(localStorage.getItem("bookingData"));
+
+if(!bookingData){
+  alert("No ticket data found!");
+  window.location.href = "home.html";
+  return;
+}
+
+// ----- Current Date -----
+const now = new Date();
+const dd = String(now.getDate()).padStart(2, "0");
+const mm = String(now.getMonth() + 1).padStart(2, "0");
+const yyyy = now.getFullYear();
+const currentDate = `${dd}-${mm}-${yyyy}`;
+
+// ----- Generate numbers -----
+function randomCode(prefix, length){
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+  let code = prefix;
+  for(let i=0;i<length;i++){
+    code += chars.charAt(Math.floor(Math.random()*chars.length));
+  }
+  return code;
+}
+
+const utsNo = randomCode("UTS", 8);
+const sacNo = Math.floor(900000 + Math.random()*99999);
+const irNo = "36AAAGM0289C1ZK";
+// =======================
+// 🔹 DISPLAY DATA (WRAPPED IN TRY SO DB NEVER BREAKS)
+// =======================
+try {
+
+document.querySelector(".detail-box:nth-child(1) span:last-child")
+.innerText = currentDate;
+
+document.querySelector(".detail-box:nth-child(2) span:last-child")
+.innerText = "₹" + bookingData.totalFare + " /-";
+
+document.getElementById("mobBox").innerText = bookingData.mobile || localStorage.getItem("mobile") || "-";
+
+
+document.querySelector(".detail-box:nth-child(4) span:last-child")
+.innerText = utsNo;
+
+document.querySelector(".double .detail-box:first-child").innerHTML =
+`<strong>From</strong><br>${bookingData.fromStation}`;
+
+document.querySelector(".double .detail-box:last-child").innerHTML =
+`<strong>To</strong><br>${bookingData.toStation}`;
+
+document.querySelector(".detail-center").innerText =
+`Passengers : Adult ${bookingData.adult} | Child ${bookingData.child}`;
+
+document.querySelector(".double:nth-of-type(2) .detail-box:first-child").innerHTML =
+`<strong>Class</strong><br>${bookingData.classType}`;
+
+document.querySelector(".double:nth-of-type(2) .detail-box:last-child").innerHTML =
+`<strong>Train Type</strong><br>${bookingData.trainType}`;
+
+document.querySelector(".detail-center:nth-of-type(2)").innerHTML =
+`SAC : ${sacNo} &nbsp;&nbsp; | &nbsp;&nbsp; IR : ${irNo}`;
+
+} catch(err) {
+  console.log("Display error only:", err);
+  // ❗ IMPORTANT: THIS WILL NOT STOP DATABASE SAVING
+}
+
+// =======================
+// ❗ YOUR DATABASE CODE — EXACTLY SAME (NOT TOUCHED)
+// =======================
+document.getElementById("doneBtn").addEventListener("click", async (e) => {
+e.preventDefault();
+
+const payload = {
+  bookingDate: currentDate,
+  totalFare: bookingData.totalFare,
+  mobile: bookingData.mobile,
+  utsNo: utsNo,
+  fromStation: bookingData.fromStation,
+  toStation: bookingData.toStation,
+  passengers: `Adult ${bookingData.adult} | Child ${bookingData.child}`,
+  classType: bookingData.classType,
+  trainType: bookingData.trainType,
+  sacNo: sacNo,
+  irNo: irNo
+};
+
+console.log("Sending to DB:", payload);
+
+try {
+  const res = await fetch("/api/bookings", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+
+  if(data.success){
+    alert("✅ Your Ticket Receipt is Saved!");
+    window.location.href = "home.html";
+  } else {
+    alert("❌ Failed to store ticket!");
+  }
+
+} catch(err){
+  console.error(err);
+  alert("❌ Start your server first!");
+}
+
+});
+
+});
+</script>
+
+
+
+
+</body>
+</html>

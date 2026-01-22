@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Booking History</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:url("images/history.jpg") no-repeat center/cover;
+    padding:20px;
+}
+
+.top-bar{
+    background:rgba(90, 162, 255, 0.165);
+    backdrop-filter: blur(6px);
+    color:#fff;
+    padding:40px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    font-size:55px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+}
+
+.top-bar span{
+    font-size:65px;
+    cursor:pointer;
+}
+
+.card{
+    margin-top:30px;
+    background:rgba(10, 34, 170, 0.153);
+    backdrop-filter: blur(12px);
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.35);
+    padding:24px;
+}
+
+.card-header{
+    background:rgba(90, 173, 255, 0.241);
+    color:#020202;
+    padding:30px 19px;
+    border-radius:14px;
+    font-size:45px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin-bottom:20px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.ticket-box{
+    background:rgba(17, 159, 220, 0.787);
+    backdrop-filter: blur(10px);
+    border-radius:18px;
+    max-width:690px;
+    margin:0 auto 19px;
+    padding:30px;
+    position: relative;
+}
+
+.tag{
+    display:inline-block;
+    background:#dff6ff;
+    padding:15px 8px;
+    border-radius:6px;
+    font-size:28px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+}
+
+.fare{
+    font-size:35px;
+    margin:8px 0;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+}
+
+.station{
+    font-size:35px;
+    margin:6px 0;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+}
+
+.station span{
+    display:block;
+    font-size:35px;
+    color:#f6f2f2;
+}
+
+.row{
+    font-size:30px;
+    line-height:1.4;
+    margin-top:25px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight:bold;
+}
+
+/* ===== VIEW TICKET BUTTON ===== */
+.view-btn{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+    padding:12px 20px;
+    font-size:25px;
+    border:none;
+    border-radius:12px;
+    background:#ff7b00;
+    color:#fff;
+    cursor:pointer;
+}
+
+/* ===== MODAL STYLE ===== */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+}
+.modal-box{
+    background: linear-gradient(135deg,#f0f8ff,#cce0ff);
+    border-radius:30px;
+    padding:25px 70px;
+    max-width:1100px;
+    width:100%;
+    position:relative;
+    box-shadow:0 25px 50px rgba(0,0,0,0.35);
+}
+.watermark{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) rotate(-30deg);
+    font-size:120px;
+    color:rgba(0,0,0,0.05);
+    font-weight:bold;
+}
+.modal-content h2{
+    font-size:65px;
+    text-align:center;
+    margin-bottom:35px;
+    font-family: Cambria, Georgia, serif;
+}
+
+/* ===== SECTION BOX STYLE ===== */
+.sections{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+.section-box{
+    background:#fff;
+    border-radius:16px;
+    padding:18px 26px;
+    box-shadow:0 10px 22px rgba(0,0,0,0.2);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:40px;
+    font-family: Cambria, Georgia, serif;
+    font-weight:bold;
+}
+.section-box.center{
+    justify-content:center;
+    text-align:center;
+}
+.left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+.icon{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:#0a2aaa;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+}
+.note{
+    background:#eef7ff;
+    border-left:6px solid #0a2aaa;
+    border-radius:14px;
+    padding:18px;
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* ===== BUTTONS ===== */
+.modal-buttons{
+    display:flex;
+    justify-content:space-between;
+    margin-top:35px;
+}
+.modal-buttons button{
+    font-size:35px;
+    padding:26px 50px;
+    border:none;
+    border-radius:20px;
+    font-family: Cambria, Georgia, serif;
+    font-weight:bold;
+    cursor:pointer;
+}
+.done-btn{ background:#0a2aaa; color:#fff; }
+.download-btn{ background:#ff7b00; color:#fff; }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+    <span onclick="goHome()">←</span>
+    Booking History
+</div>
+
+<div class="card">
+    <div class="card-header">🎟️ BOOKING HISTORY</div>
+    <div id="ticketContainer"></div>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal" id="ticketModal">
+    <div class="modal-box" id="ticketContent">
+        <div class="watermark">BOOKED</div>
+        <div class="modal-content" id="modalDetails">
+            <!-- Dynamic ticket content goes here -->
+        </div>
+        <div class="modal-buttons">
+            <button class="done-btn" onclick="closeModal()">DONE</button>
+            <button class="download-btn" onclick="downloadTicket('ticketContent','Ticket')">DOWNLOAD</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== GET USER MOBILE (ADDED) =====
+const userMobile =
+    localStorage.getItem("mobileNumber") ||
+    localStorage.getItem("mobile") ||
+    "N/A";
+
+function goHome(){
+    window.location.href="home.html";
+}
+
+function openModal(contentHtml){
+    const modal = document.getElementById("ticketModal");
+    const modalDetails = document.getElementById("modalDetails");
+    modalDetails.innerHTML = contentHtml;
+    modal.style.display = "flex";
+}
+
+function closeModal(){
+    document.getElementById("ticketModal").style.display = "none";
+}
+
+// ===== UPDATED DOWNLOAD FUNCTION =====
+function downloadTicket(modalId, fileName){
+    const modal = document.getElementById(modalId);
+    const content = modal.querySelector('.modal-content');
+
+    let opt = {
+        margin: 0,
+        filename: fileName + '.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: {
+            scale: 1.5,
+            useCORS: true
+        },
+        jsPDF: {
+            unit: 'px',
+            format: [content.offsetWidth, content.offsetHeight],
+            orientation: 'portrait'
+        },
+        pagebreak: { mode: ['avoid-all'] }
+    };
+
+    html2pdf().from(content).set(opt).save();
+}
+
+async function loadBookingHistory() {
+    const container = document.getElementById("ticketContainer");
+    container.innerHTML = "";
+
+    try {
+        // ===== PLATFORM TICKETS =====
+        const platformResponse = await fetch("http://localhost:5000/api/receipts");
+        const platformReceipts = await platformResponse.json();
+
+        if(platformReceipts && platformReceipts.length > 0){
+            platformReceipts.forEach(receipt => {
+                const persons = Number(receipt.noOfPersons) || 0;
+                const fare = Number(receipt.platformTicket) || persons * 10;
+
+                let ticketHTML = `
+                <div class="ticket-box">
+                    <span class="tag">PLATFORM TICKET</span>
+                    <div class="fare">FARE: ₹ ${fare}.00</div>
+                    <div class="station">
+                        <span>Station :</span> ${receipt.station || "N/A"}
+                    </div>
+                    <div class="row">
+                        Persons: ${persons}<br>
+                        BOOKING DATE : ${receipt.bookingDate || "N/A"}
+                    </div>
+                    <button class="view-btn" onclick='viewPlatformTicket(${JSON.stringify(receipt)})'>View Ticket</button>
+                </div>`;
+                container.innerHTML += ticketHTML;
+            });
+        }
+
+        // ===== BOOKING TICKETS =====
+        const bookingResponse = await fetch("http://localhost:5000/api/bookings");
+        const bookings = await bookingResponse.json();
+
+        if(bookings && bookings.length > 0){
+            bookings.forEach(booking => {
+
+                // ===== MOBILE INJECTION (ADDED) =====
+                booking.mobile = booking.mobile || userMobile;
+
+                let fare = booking.totalFare || 0;
+                let passengers = booking.passengers || "Adult: 0 / Child: 0";
+                let trainType = booking.trainType || "N/A";
+                let classType = booking.classType || "N/A";
+                let fromStation = booking.fromStation || "N/A";
+                let toStation = booking.toStation || "N/A";
+                let bookingDate = booking.bookingDate || "N/A";
+
+                let bookingHTML = `
+                <div class="ticket-box">
+                    <span class="tag">BOOKING TICKET</span>
+                    <div class="fare">FARE: ₹ ${fare}.00</div>
+                    <div class="station">
+                        <span>From - To :</span> ${fromStation} → ${toStation}
+                    </div>
+                    <div class="row">
+                        ${passengers}<br>
+                        Train Type: ${trainType}<br>
+                        Class: ${classType}<br>
+                        BOOKING DATE : ${bookingDate}
+                    </div>
+                    <button class="view-btn" onclick='viewBookingTicket(${JSON.stringify(booking)})'>View Ticket</button>
+                </div>`;
+                container.innerHTML += bookingHTML;
+            });
+        }
+
+        if((!platformReceipts || platformReceipts.length === 0) &&
+           (!bookings || bookings.length === 0)){
+            container.innerHTML =
+            "<p style='text-align:center; font-size:35px; color:#fff;'>No booking history found!</p>";
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Error loading booking history");
+    }
+}
+
+function viewBookingTicket(data){
+    let html = `
+        <h2>HAPPY JOURNEY</h2>
+        <div class="sections">
+            <div class="section-box">
+                <div class="left"><div class="icon">🚆</div>Journey</div>
+                <div>${data.bookingDate || "N/A"}</div>
+            </div>
+            <div class="section-box">
+                <div class="left"><div class="icon">💰</div>Fare</div>
+                <div>₹${data.totalFare || 0}</div>
+            </div>
+            <div class="section-box">
+                <div class="left"><div class="icon">📱</div>Mobile</div>
+                <div>${data.mobile || "N/A"}</div>
+            </div>
+            <div class="section-box center">🎫 UTS No : ${data.utsNo || "N/A"}</div>
+            <div class="section-box">
+                <div class="left"><div class="icon">🚉</div>From</div>
+                <div>${data.fromStation || "N/A"}</div>
+            </div>
+            <div class="section-box">
+                <div class="left"><div class="icon">🏁</div>To</div>
+                <div>${data.toStation || "N/A"}</div>
+            </div>
+            <div class="section-box">
+                <div class="left"><div class="icon">👥</div>Passengers</div>
+                <div>${data.passengers || "N/A"}</div>
+            </div>
+            <div class="section-box">
+                <div class="left"><div class="icon">🎟️</div>Class</div>
+                <div>${data.classType || "N/A"}</div>
+            </div>
+            <div class="section-box">
+                <div class="left"><div class="icon">🚄</div>Train Type</div>
+                <div>${data.trainType || "N/A"}</div>
+            </div>
+            <div class="section-box center">
+                SAC : ${data.sacNo || "N/A"} | IR : ${data.irNo || "N/A"}
+            </div>
+        </div>`;
+    openModal(html);
+}
+
+function viewPlatformTicket(data){
+    let html = `
+        <h2>PLATFORM TICKET</h2>
+        <div class="sections">
+            <div class="section-box"><div class="left"><div class="icon">🚉</div>Station</div><div>${data.station || "N/A"}</div></div>
+            <div class="section-box"><div class="left"><div class="icon">📅</div>Date</div><div>${data.bookingDate || "N/A"}</div></div>
+            <div class="section-box"><div class="left"><div class="icon">💰</div>Fare</div><div>₹${data.platformTicket || 0}</div></div>
+            <div class="section-box"><div class="left"><div class="icon">👥</div>Persons</div><div>${data.noOfPersons || 0}</div></div>
+            <div class="section-box"><div class="left"><div class="icon">⏱</div>Validity</div><div>2 Hours</div></div>
+            <div class="section-box center">✅ STATUS : VALID</div>
+        </div>`;
+    openModal(html);
+}
+
+loadBookingHistory();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</body>
+</html>

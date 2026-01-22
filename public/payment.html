@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Make Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    padding-right:1050px;
+    font-family:Cambria, serif;
+    background:
+      linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+      url('images/engine1.jpg') no-repeat center/cover;
+}
+/* ================= MAIN PAYMENT ================= */
+.payment-card{
+    width:650px;
+    padding:90px;
+    border-radius:28px;
+    background:rgba(255,255,255,0.18);
+    backdrop-filter:blur(22px);
+    box-shadow:0 35px 70px rgba(0,0,0,0.45);
+}
+.title{
+    font-size:80px;
+    font-weight:bold;
+    text-align:center;
+}
+.subtitle{
+    text-align:center;
+    font-size:35px;
+    font-weight:bold;
+    color:#fff;
+    margin:20px 0 45px;
+}
+/* PAYMENT OPTIONS */
+.option{
+    background:rgba(255,255,255,0.2);
+    border-radius:22px;
+    padding:14px;
+    margin-bottom:32px;
+}
+.option-header{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:26px;
+}
+input[type=radio]{ width:38px; height:38px; cursor:pointer; }
+.option-title{ font-size:35px; font-weight:bold; }
+.icon-row{ display:flex; gap:16px; }
+.payment-icon{ height:45px; }
+.gpay-big{ height:120px; }
+.mastercard{ height:80px; }
+/* FARE */
+.fare-box{
+    margin-top:30px;
+    padding:25px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#1e90ff,#005eff);
+    text-align:center;
+}
+.fare-box span{
+    font-size:40px;
+    font-weight:bold;
+    color:#fff;
+}
+.pay-btn{
+    margin-top:36px;
+    width:100%;
+    height:85px;
+    font-size:50px;
+    font-weight:bold;
+    border:none;
+    border-radius:22px;
+    background:linear-gradient(135deg,#1e90ff,#005eff);
+    color:white;
+    cursor:pointer;
+}
+/* ================= OVERLAY ================= */
+.alert-modal,.modal,.ticket-loading{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+/* ================= QR ALERT ================= */
+.alert-box{
+    background:#ffeaea;
+    padding:80px 60px;
+    border-radius:35px;
+    width:900px;
+    text-align:center;
+    border:4px solid #e74c3c;
+}
+.alert-box h2{
+    font-size:75px;
+    font-weight: bold;
+}
+.alert-box p{
+    font-size:35px;
+    font-weight:bold;
+}
+.alert-box select{
+    width:70%;
+    padding:18px;
+    font-size:38px;
+    font-weight:bold;
+    border-radius:15px;
+    margin-top:25px;
+}
+.qr-display{
+    display:none;
+    margin-top:30px;
+}
+.qr-display img{ width:260px; }
+.alert-buttons{
+    display:flex;
+    justify-content:center;
+    gap:50px;
+    margin-top:35px;
+}
+.alert-buttons button{
+    font-size:50px;
+    font-weight:bold;
+    padding:20px;
+    border-radius:18px;
+    width:200px;
+    border:none;
+    cursor:pointer;
+}
+.error-msg{
+    font-size:35px;
+    font-weight:bold;
+    color:#e74c3c;
+    margin-top:20px;
+    display:none;
+}
+/* ================= SUCCESS ================= */
+.modal-content{
+    background:#eaffea;
+    padding:80px 60px;
+    border-radius:35px;
+    width:820px;
+    font-size:48px;
+    color:#03ce62;
+    font-weight:bold;
+    text-align:center;
+    border:4px solid #1fa84f;
+}
+.success-wrapper{
+    position:relative;
+    width:200px;
+    height:200px;
+    margin:0 auto 30px;
+}
+.success-circle{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border:8px solid #1fa84f;
+    position:absolute;
+    animation:circleGrow 0.8s forwards;
+}
+.success-check{
+    stroke-dasharray:100;
+    stroke-dashoffset:100;
+    stroke:#1fa84f;
+    stroke-width:6;
+    fill:none;
+    animation:checkDraw 0.6s 0.9s forwards;
+}
+@keyframes circleGrow{ from{transform:scale(0);} to{transform:scale(1);} }
+@keyframes checkDraw{ to{stroke-dashoffset:0;} }
+.modal-content button{
+    margin-top:30px;
+    width:100%;
+    padding:28px;
+    font-size:55px;
+    font-weight:bold;
+    border:none;
+    border-radius:22px;
+    cursor:pointer;
+    color:#fff;
+    background:linear-gradient(135deg,#1fa84f,#0b8a3a);
+}
+/* ===== GENERATING TICKET LOADING ===== */
+.ticket-box{
+    background:#e3f2f9;
+    padding:80px 90px;
+    border-radius:25px;
+    font-size:48px;
+    font-weight:bold;
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+.dot-loader{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    margin-top:25px;
+}
+.dot-loader span{
+    width:30px;
+    height:30px;
+    background:#0dcbfb;
+    border-radius:50%;
+    animation:bounce 1.4s infinite ease-in-out;
+}
+.dot-loader span:nth-child(2){ animation-delay:.2s; }
+.dot-loader span:nth-child(3){ animation-delay:.4s; }
+@keyframes bounce{
+    0%,80%,100%{ transform:scale(0); }
+    40%{ transform:scale(1); }
+}
+</style>
+</head>
+<body>
+<!-- MAIN PAGE -->
+<div class="payment-card">
+    <div class="title">Make Payment</div>
+    <div class="subtitle">Select Payment Method</div>
+
+    <div class="option">
+        <div class="option-header">
+            <input type="radio" name="payment" id="radio1" onclick="toggleRadio(this)">
+            <div class="option-title">UPI / Net Banking</div>
+        </div>
+        <div class="icon-row">
+            <img src="images/gpay.png" class="payment-icon gpay-big">
+        </div>
+    </div>
+    <div class="option">
+        <div class="option-header">
+            <input type="radio" name="payment" id="radio2" onclick="toggleRadio(this)">
+            <div class="option-title">Credit / Debit Card</div>
+        </div>
+        <div class="icon-row">
+            <img src="images/visa.png" class="payment-icon">
+            <img src="images/mastercard.png" class="payment-icon mastercard">
+            <img src="images/rupay.png" class="payment-icon">
+        </div>
+    </div>
+
+    <button class="pay-btn" onclick="openQR()">Pay Now</button>
+</div>
+
+<!-- QR MODAL -->
+<div class="alert-modal" id="qrModal">
+    <div class="alert-box">
+        <h2>Scan and Pay</h2>
+        <p>Select a UPI QR Code</p>
+        <select id="alertQR" onchange="showQR()">
+            <option value="">--- Select QR Code ---</option>
+            <option>Google Pay</option>
+            <option>PhonePe</option>
+            <option>Paytm</option>
+            <option>BHIM UPI</option>
+        </select>
+        <div class="qr-display" id="qrDisplay">
+            <img id="qrImage">
+        </div>
+
+        <div class="error-msg" id="errorMsg">⚠ No UPI selected. Please choose a UPI app to proceed with payment.</div>
+
+        <div class="alert-buttons">
+            <button style="background:#1b9cff;color:white" onclick="pay()">Pay</button>
+            <button style="background:#e74c3c;color:white" onclick="closeQR()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal" id="successModal">
+    <div class="modal-content">
+        <div class="success-wrapper">
+            <div class="success-circle"></div>
+            <svg width="200" height="200" viewBox="0 0 52 52">
+                <path class="success-check" d="M14 27 L22 34 L38 16"></path>
+            </svg>
+        </div>
+        <h2>Payment Successful 🎉</h2>
+        <p>Your ticket has been booked</p>
+        <button onclick="showTicketLoading()">OK</button>
+    </div>
+</div>
+
+<!-- GENERATING TICKET LOADING -->
+<div class="ticket-loading" id="ticketLoading">
+    <div class="ticket-box">
+        Generating your ticket
+        <div class="dot-loader">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </div>
+</div>
+
+<script>
+let lastChecked = null;
+function toggleRadio(radio) {
+    if (lastChecked === radio) {
+        radio.checked = false;  // deselect if clicked again
+        lastChecked = null;
+    } else {
+        lastChecked = radio;
+    }
+}
+
+function openQR(){
+    document.getElementById("qrModal").style.display="flex";
+    document.getElementById("errorMsg").style.display="none";
+}
+function closeQR(){
+    document.getElementById("qrModal").style.display="none";
+}
+function showQR(){
+    var qrSelect = document.getElementById("alertQR");
+    var selectedValue = qrSelect.value;
+
+    if(selectedValue === ""){
+        document.getElementById("qrDisplay").style.display = "none";
+        document.getElementById("errorMsg").style.display = "block";
+    } else {
+        document.getElementById("errorMsg").style.display = "none";
+        var qrModal = document.getElementById("qrModal");
+        qrModal.querySelector(".qr-display").style.display = "none";
+        qrModal.querySelector("p").innerText = "Loading Scanner... ⏳";
+
+        setTimeout(function(){
+            qrModal.querySelector("p").innerText = "Scan QR to Pay";
+            var qrDisplay = document.getElementById("qrDisplay");
+            qrDisplay.style.display = "block";
+            document.getElementById("qrImage").src =
+                "https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=" +
+                encodeURIComponent(selectedValue + " UPI Payment");
+        }, 1500);
+    }
+}
+function pay(){
+    var qrSelect = document.getElementById("alertQR");
+    var selectedValue = qrSelect.value;
+
+    if(selectedValue === ""){
+        document.getElementById("errorMsg").style.display = "block";
+        return;
+    }
+    document.getElementById("qrModal").style.display="none";
+    document.getElementById("successModal").style.display="flex";
+}
+function showTicketLoading(){
+    document.getElementById("successModal").style.display="none";
+    document.getElementById("ticketLoading").style.display="flex";
+
+    setTimeout(function(){
+        window.location.href="receipt.html";
+    }, 3500);
+}
+</script>
+</body>
+</html>
