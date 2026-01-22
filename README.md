@@ -1,4 +1,4 @@
-# 🚆 RailOne Ticket Booking System
+<img width="1" height="1" alt="image" src="https://github.com/user-attachments/assets/e422e283-3122-4dc3-9ce5-abf724aca622" /># 🚆 RailOne Ticket Booking System
 
 RailOne Ticket System is a full-stack web application developed to provide an online railway ticket booking experience.  
 This system allows users to create an account, login securely, book railway tickets, book platform tickets, view their profile, and access information about the system.
@@ -17,10 +17,10 @@ Database: MongoDB
 
 ## 🔁 Complete Project Workflow & Features
 
-### 🔐 Create Account
+### 🆕👤 Create Account
 First of all Create the Account, the user is redirected to the *Login Page*.
 
-### 🔐 User Login
+### 🔐👤 User Login
 After successful login, the user is redirected to the *Train Home Page*.
 
 ---
