@@ -17,6 +17,9 @@ Database: MongoDB
 
 ## 🔁 Complete Project Workflow & Features
 
+### 🔐 Create Account
+First of all Create the Account, the user is redirected to the *Login Page*.
+
 ### 🔐 User Login
 After successful login, the user is redirected to the *Train Home Page*.
 
