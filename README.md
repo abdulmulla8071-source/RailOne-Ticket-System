@@ -15,27 +15,100 @@ Database: MongoDB
 
 ---
 
-## ✨ Features
+## 🔁 Complete Project Workflow & Features
 
-- User account creation (Sign Up)
-- User login authentication
-- Train ticket booking
-- Platform ticket booking
-- User profile section
-- About page
-- Database connectivity using MongoDB
-- Backend routing using Express.js
+### 🔐 User Login
+After successful login, the user is redirected to the *Train Home Page*.
 
 ---
 
-## 🔁 Project Process / Flow
+### 🏠 Train Home Page
+The home page contains a navigation menu with the following options:
 
-1. User creates an account.
-2. User logs in using registered credentials.
-3. User books railway ticket.
-4. User books platform ticket.
-5. User can view profile details.
-6. User can view about section.
+- Journey Ticket
+- Platform Ticket
+- Booking History
+- Profile
+- About
+
+All ticket-related operations are accessible from this home page.
+
+---
+
+## 🚆 Journey Ticket Booking Process
+
+1. User selects *Journey Ticket* from the home page.
+2. User enters journey details:
+   - From Station
+   - To Station
+3. User proceeds to the *Fare Page*.
+4. On the fare page, user fills required passenger details.
+5. System displays train and fare details.
+6. User clicks on *Book Ticket*.
+7. User is redirected to the *Payment Page*.
+8. User selects *UPI payment method*.
+9. User scans the QR code.
+10. After successful payment, a *Payment Successful* alert is shown.
+11. User clicks the *OK* button.
+12. User is redirected to the *Train Ticket Receipt Page*.
+13. User can view complete ticket details.
+
+---
+
+## 🚉 Platform Ticket Booking Process
+
+1. User selects *Platform Ticket* from the home page.
+2. User enters platform ticket details:
+   - Station Name
+   - Number of Persons
+   - Payment Method
+3. User clicks on *Book Platform Ticket*.
+4. User is redirected to the *Platform Payment Page*.
+5. Platform ticket details are displayed.
+6. User clicks the *Next* button.
+7. A *Payment Successful alert box* appears.
+8. User clicks the *OK* button.
+9. User is redirected to the *Platform Ticket Receipt Page*.
+10. User can view the platform ticket receipt.
+
+---
+
+## 📜 Booking History
+
+1. User selects *Booking History* from the home page.
+2. User can view all previously booked:
+   - Journey Tickets
+   - Platform Tickets
+3. User clicks on *View* option.
+4. Ticket receipt is displayed.
+5. User can *download the receipt* for future use.
+
+---
+
+## 👤 Profile Section
+
+- User can view personal profile information.
+- Displays user account details.
+
+---
+
+## ℹ️ About Section
+
+- Displays complete information about the *RailOne Ticket System*.
+- Provides system overview and project description.
+
+---
+
+## ⚙️ System Highlights
+
+- Full authentication-based system
+- Secure ticket booking flow
+- Separate journey and platform ticket modules
+- Digital ticket receipt generation
+- Booking history management
+- Clean and user-friendly interface
+- MongoDB database integration
+- Node.js and Express.js backend handling
 
 ---
 
